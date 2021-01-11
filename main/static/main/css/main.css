@@ -1,0 +1,20 @@
+.header {
+  background-color: #0C4B33;
+  padding: 10px 0;
+}
+
+.logo__container {
+  font-size: 22px;
+  color: white;
+}
+
+.header-menu__elem {
+  color: white;
+  display: inline;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.header-menu {
+  margin: 0;
+}
