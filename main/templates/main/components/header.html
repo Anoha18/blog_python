@@ -4,10 +4,17 @@
       <div class="col">
         {% include 'main/components/logo.html' %}
       </div>
-      <div class="col">
-        <ul class="header-menu">
-          <li class="header-menu__elem">Главная</li>
-          <li class="header-menu__elem">Конакты</li>
+      <div class="col p-0">
+        <ul class="header-menu text-end m-0">
+          <li class="header-menu__elem">
+            <a class="{% if request.path == '/' %}active{% endif %}" href="/">Главная</a>
+          </li>
+          <li class="header-menu__elem">
+            <a href="/contacts">Конакты</a>
+          </li>
+          <li class="header-menu__elem m-0">
+            <a class="{% if request.path == '/login/' %}active{% endif %}" href="/login">Войти</a>
+          </li>
         </ul>
       </div>
     </div>

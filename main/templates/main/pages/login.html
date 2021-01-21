@@ -1,0 +1,14 @@
+{% extends 'main/layouts/layout.html' %}
+
+{% block title %}Авторизация{% endblock %}
+
+{% block content %}
+  <div class="h-100 login__container d-flex justify-content-center align-items-center">
+    <div class="form__card">
+      {% include 'main/components/login_form.html' %}
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="#">New around here? Sign up</a>
+      <a class="dropdown-item" href="#">Forgot password?</a>
+    </div>
+  </div>
+{% endblock %}

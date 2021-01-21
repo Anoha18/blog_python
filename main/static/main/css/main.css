@@ -1,3 +1,24 @@
+@font-face {
+  font-family: 'RobotoSlab';
+  src: url('../fonts/RobotoSlab-Bold.ttf') format('truetype'),
+       url('../fonts/RobotoSlab-Medium.ttf') format('truetype'),
+       url('../fonts/RobotoSlab-Regular.ttf') format('truetype'),
+       url('../fonts/RobotoSlab-Light.ttf') format('truetype')
+}
+
+body {
+  font-family: 'RobotoSlab' !important;
+}
+
+li {
+  text-decoration: none !important;
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none !important;
+}
+
 .header {
   background-color: #0C4B33;
   padding: 10px 0;
@@ -15,6 +36,113 @@
   margin-right: 10px;
 }
 
+.header-menu__elem > a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+/* .header-menu__elem > a .active {
+
+} */
+
+.header-menu__elem > a:hover, a.active {
+  text-decoration: none;
+  color: #41d641;
+}
+
+.header__container {
+  padding-right: 0 !important;
+}
+
 .header-menu {
   margin: 0;
+}
+
+.card-img__container {
+  height: 200px;
+}
+
+.card-img-top {
+  height: 100%;
+  object-fit: cover;
+}
+
+.recommend {
+  background-color: lightgray;
+  border-radius: 4px;
+  padding: 10px 20px;
+}
+
+.recommend__header {
+  border-bottom: 1px solid #212529;
+}
+
+.recommend__header-title {
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 15px;
+  line-height: 50px;
+  color: #212529;
+  font-family: 'RobotoSlab';
+  word-wrap: break-word;
+}
+
+.recommend__content {
+  margin-top: 15px;
+}
+
+.content-list {
+  padding-left: 0;
+}
+
+.list__item-meta {
+  display: flex;
+}
+
+.meta__item {
+  margin-right: 10px;
+}
+
+.list__item-title {
+  color: #212529;
+  line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  font-size: 14px;
+}
+
+.list__item-title:hover {
+  color: #41d641;
+}
+
+.list__item-meta {
+  margin-top: 9px;
+  margin-bottom: 2px;
+}
+
+.content-list__item {
+  border-bottom: 1px solid #b3b7c4;
+  padding-top: 8px;
+  padding-bottom: 16px;
+}
+
+.content-list__item:last-child {
+  border-bottom: none;
+  padding-bottom: 0px;
+}
+
+.login__container {
+  background-color: #f4f4f4;
+}
+
+.form__card {
+  max-width: 450px;
+  min-width: 100px;
+  width: 450px;
+  background-color: white;
+  padding: 0 20px 20px 20px;
+  border-radius: 10px;
 }
