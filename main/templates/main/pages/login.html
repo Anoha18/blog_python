@@ -7,8 +7,8 @@
     <div class="form__card">
       {% include 'main/components/login_form.html' %}
       <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#">New around here? Sign up</a>
-      <a class="dropdown-item" href="#">Forgot password?</a>
+      <a class="dropdown-item" href="{% url 'register' %}">Впервые здесь? Зарегистрироваться</a>
+      <a class="dropdown-item" href="#">Забыли пароль?</a>
     </div>
   </div>
 {% endblock %}

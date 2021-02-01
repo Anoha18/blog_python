@@ -1,0 +1,13 @@
+{% extends 'main/layouts/layout.html' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+  <div class="h-100 login__container d-flex justify-content-center align-items-center">
+    <div class="form__card">
+      {% include 'main/components/register_form.html' %}
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{% url 'login' %}">Уже есть аккаунт? Войти</a>
+    </div>
+  </div>
+{% endblock %}
