@@ -1,0 +1,20 @@
+<nav id="sidebar" class="account-sidebar">
+  <div>
+    <div class="sidebar-header">
+      <i class="sidebar-header__img fas fa-paper-plane"></i>
+      <h3>PyBlog</h3>
+    </div>
+  
+    <ul class="sidebar-menu">
+      <li class="{% if request.path == '/account/' %}active{% endif %}">
+        <a href="{% url 'account_home' %}">Главная</a>
+      </li>
+      <li>
+        <a href="#">Посты</a>
+      </li>
+      <li class="logout">
+        <a href="{% url 'account_logout' %}">Выйти</a>
+      </li>
+    </ul>
+  </div>
+</nav>

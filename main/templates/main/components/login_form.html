@@ -1,4 +1,5 @@
-<form class="login__form px-4 py-3">
+<form class="login__form px-4 py-3" method="post" novalidate>
+  {% csrf_token %}
   <div class="form__header mb-4">
     <h3>
       Вход

@@ -19,7 +19,7 @@ class User(AbstractBaseUser):
   objects = UserManager()
 
   def __str__ (self):
-    return self.first_name
+    return self.login
 
   class Meta:
     verbose_name = 'Пользователь'

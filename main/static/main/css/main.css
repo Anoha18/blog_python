@@ -8,6 +8,7 @@
 
 body {
   font-family: 'RobotoSlab' !important;
+  height: 100%;
 }
 
 li {
@@ -40,10 +41,6 @@ a {
   text-decoration: none;
   color: #ffffff;
 }
-
-/* .header-menu__elem > a .active {
-
-} */
 
 .header-menu__elem > a:hover, a.active {
   text-decoration: none;
