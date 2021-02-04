@@ -36,13 +36,12 @@ def register(request):
   if request.method == 'POST':
     form = SignUpForm(request.POST)
     if form.is_valid():
-      print('HERE 1')
       form.save()
       login = form.cleaned_data['login']
       password = form.cleaned_data['password1']
       user = authenticate(login=login, password=password)
-      login(request, user)
-      return redirect('home')
+      Login(request, user)
+      return redirect('account_home')
     return render(request, registerFormPath, { 'errors': form.errors })
     
 

@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import logout as Logout
 from django.contrib.auth.decorators import login_required
@@ -10,3 +11,7 @@ def index(request):
 def logout(request):
   Logout(request)
   return redirect('home')
+
+@login_required
+def posts(request):
+  return render(request, 'account/pages/posts.html')

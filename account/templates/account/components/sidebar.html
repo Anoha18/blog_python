@@ -6,11 +6,11 @@
     </div>
   
     <ul class="sidebar-menu">
-      <li class="{% if request.path == '/account/' %}active{% endif %}">
+      <li class="{% if request.resolver_match.url_name == 'account_home' %}active{% endif %}">
         <a href="{% url 'account_home' %}">Главная</a>
       </li>
-      <li>
-        <a href="#">Посты</a>
+      <li class="{% if request.resolver_match.url_name == 'account_posts' %}active{% endif %}">
+        <a href="{% url 'account_posts' %}">Посты</a>
       </li>
       <li class="logout">
         <a href="{% url 'account_logout' %}">Выйти</a>

@@ -2,6 +2,14 @@
   display: flex;
   width: 100%;
   align-items: stretch;
+  height: 100vh;
+}
+
+.content {
+  padding: 20px 10px 10px 20px;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
 }
 
 .account-sidebar {
@@ -60,11 +68,15 @@
 }
 
 .sidebar-menu > li.logout > a:hover {
-  font-size: 18px;
+  font-size: 23px;
   color: #ff5757
 }
 
 .sidebar-menu > li > a {
   text-decoration: none;
   color: #fff;
+}
+
+.account-post__card {
+  margin-top: 10px;
 }
