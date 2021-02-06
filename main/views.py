@@ -1,4 +1,4 @@
-from django.http.response import HttpResponse
+from django.http.response import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import login as Login, authenticate
 from account.models import User
@@ -9,6 +9,7 @@ def index(request):
 
 def login(request):
   redirectPage = 'main/pages/login.html'
+  nextPage = request.GET.get('next');
   
   if request.user.id is not None:
     return redirect('/account')
@@ -24,7 +25,10 @@ def login(request):
     if user is None:
       return render(request, redirectPage)
     Login(request, user)
-    return redirect('account_home')
+    if nextPage is not None:
+      return redirect(nextPage);
+    else:
+      return redirect('account_home')
 
   return render(request, redirectPage)
 
@@ -45,3 +49,5 @@ def register(request):
     return render(request, registerFormPath, { 'errors': form.errors })
     
 
+def not_found_page(request, exception):
+  return HttpResponse('Sorry. Page not found')

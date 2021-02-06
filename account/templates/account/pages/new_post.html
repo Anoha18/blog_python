@@ -1,0 +1,15 @@
+{% extends 'account/layouts/account_layout.html' %}
+
+{% block title %}Новый пост | Личный кабинет{% endblock %}
+
+{% block content %}
+  <div class="container justify-content-center align-content-center">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'account_home' %}" class="link-dark">Главная</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'account_posts' %}" class="link-dark">Посты</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Новый пост</li>
+      </ol>
+    </nav>
+  </div>
+{% endblock %}

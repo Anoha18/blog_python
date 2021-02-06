@@ -1,20 +1,23 @@
-<nav id="sidebar" class="account-sidebar">
-  <div>
-    <div class="sidebar-header">
-      <i class="sidebar-header__img fas fa-paper-plane"></i>
-      <h3>PyBlog</h3>
-    </div>
-  
-    <ul class="sidebar-menu">
-      <li class="{% if request.resolver_match.url_name == 'account_home' %}active{% endif %}">
-        <a href="{% url 'account_home' %}">Главная</a>
-      </li>
-      <li class="{% if request.resolver_match.url_name == 'account_posts' %}active{% endif %}">
-        <a href="{% url 'account_posts' %}">Посты</a>
-      </li>
-      <li class="logout">
-        <a href="{% url 'account_logout' %}">Выйти</a>
-      </li>
-    </ul>
+<nav id="sidebar" class="account-sidebar d-flex flex-column justify-content-start">
+  <div class="sidebar-header">
+    <i class="sidebar-header__img fas fa-paper-plane"></i>
+    <h3>PyBlog</h3>
   </div>
+
+  <ul class="sidebar-menu h-100" style="overflow-x: auto;">
+    <li class="{% if request.resolver_match.url_name == 'account_home' %}active{% endif %}">
+      <a href="{% url 'account_home' %}">Главная</a>
+    </li>
+    <li class="{% if '/account/posts/' in request.path %}active{% endif %}">
+      <a href="{% url 'account_posts' %}">Посты</a>
+    </li>
+    {% if request.user.is_admin %}
+      <li class="{% if '/account/categories/' in request.path %}active{% endif %}">
+        <a href="{% url 'account_categories' %}">Категории</a>
+      </li>
+    {% endif %}
+    <li class="logout">
+      <a href="{% url 'account_logout' %}">Выйти</a>
+    </li>
+  </ul>
 </nav>

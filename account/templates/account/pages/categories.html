@@ -1,0 +1,58 @@
+{% extends 'account/layouts/account_layout.html' %}
+
+{% block title %}Категории | Личный кабинет{% endblock %}
+
+{% block content %}
+  <div class="container justify-content-center align-content-center h-100 d-flex flex-column">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'account_home' %}" class="link-dark">Главная</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Категории</li>
+      </ol>
+    </nav>
+    <div>
+      <button type="button" class="btn btn-light mb-2" data-bs-toggle="modal" data-bs-target="#newCategoryModal">
+        <i class="fas fa-plus" style="margin-right: 10px;"></i>
+        Добавить категорию
+      </button>
+    </div>
+    {% if categories.count == 0 %}
+      <div class="d-flex justify-content-center align-items-center flex-grow-1">
+        <h2>Категории не найдены</h2>
+      </div>
+    {% else %}
+      <div class="d-flex flex-grow-1 mt-3">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Наименование</th>
+              <th scope="col">Описание</th>
+              <th scope="col">Краткое наименование</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+  
+            {% for category in categories %}
+              <tr>
+                <th scope="row">{{ category.id }}</th>
+                <td>{{ category.name }}</td>
+                <td>{{ category.description }}</td>
+                <td>{{ category.brief }}</td>
+                <td><i style="color: red;" class="fas fa-trash-alt"></i></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+    
+    {% include 'account/components/new_category_modal.html' %}
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {% load static %}
+  <script src="{% static 'account/js/category.js' %}"></script>
+{% endblock %}
