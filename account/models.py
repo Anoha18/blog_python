@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db import models
 from .user_manager import UserManager
+from django.contrib.sessions.models import Session
 
 
 # Create your models here.
@@ -26,4 +27,9 @@ class User(AbstractBaseUser):
     verbose_name = 'Пользователь'
     verbose_name_plural = 'Пользователи'
 
-
+class User_sessions(models.Model):
+  session = models.ForeignKey(Session, on_delete=models.CASCADE, null=False, blank=False)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=True)
+  active = models.BooleanField(default=True, null=False, blank=False)
+  created_at = models.DateTimeField(auto_now=True, null=False, blank=False)
+  closed_at = models.DateTimeField(null=True)

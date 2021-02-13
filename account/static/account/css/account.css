@@ -80,3 +80,30 @@
 .account-post__card {
   margin-top: 10px;
 }
+
+.CodeMirror, .CodeMirror-scroll {
+  min-height: 200px;
+}
+
+.CodeMirror {
+  max-height: 500px;
+}
+
+.CodeMirror.CodeMirror-fullscreen {
+  max-height: none;
+}
+
+.account-card-text > * {
+  font-size: 16px !important;
+}
+
+.account-card-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4; /* number of lines to show */
+  line-height: 1.5em;        /* fallback */
+  max-height: 6.0em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
+}

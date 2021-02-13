@@ -1,5 +1,9 @@
 {% extends 'account/layouts/account_layout.html' %}
 
+{% block links %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+{% endblock %}
+
 {% block title %}Новый пост | Личный кабинет{% endblock %}
 
 {% block content %}
@@ -11,5 +15,45 @@
         <li class="breadcrumb-item active" aria-current="page">Новый пост</li>
       </ol>
     </nav>
+
+    <div class="row">
+      <form method="POST" id="newPostForm" enctype="multipart/form-data" class="col-12 justify-content-center align-items-center d-flex flex-column w-100">
+        {% csrf_token %}
+        <div class="form-group mb-3 w-75">
+          <label for="postCategory">Выберите категорию</label>
+          <select name="category_id" class="form-select" id="postCategory" aria-label="Выбор категории">
+            {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group mb-3 w-75">
+          <label for="categoryName">Заголовок</label>
+          <input name="postTitle" id="postTitle" placeholder="Заголовок поста" type="text" class="form-control" aria-describedby="basic-addon3">
+          <div id="categoryNameError" class="invalid-feedback d-none"></div>
+        </div>
+        <!-- d-flex flex-column -->
+        <div class="form-group mb-3 w-75 d-flex flex-column">
+          <textarea name="postText" placeholder="Текст поста" id="postText" style="display: none;"></textarea>
+          <!-- <div id="categoryNameError" class="invalid-feedback d-none"></div> -->
+        </div>
+        <div class="form-group mb-3 w-75">
+          <label for="formFile" class="form-label">Выберите картинку поста</label>
+          <input name="post_image" class="form-control" type="file" id="formFile">
+        </div>
+        <div class="w-75 d-none" id="formImageContainer">
+          <img src="#" class="img-fluid w-100" style="object-fit: cover; height: 300px;" id="formImagePreview" alt="Responsive image">
+        </div>
+        <div class="w-75 mt-3">
+          <button type="submit" class="btn btn-primary bg-dark border-0">Опубликовать</button>
+        </div>
+      </form>
+    </div>
   </div>
+{% endblock %}
+
+{% block scripts %}
+  {% load static %}
+  <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+  <script src="{% static 'account/js/newPost.js' %}"></script>
 {% endblock %}

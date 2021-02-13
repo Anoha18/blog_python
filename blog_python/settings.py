@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'blog_python.middlewares.CreateSession'
 ]
 
 ROOT_URLCONF = 'blog_python.urls'
@@ -135,3 +136,5 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = '/login'
+
+MEDIA_ROOT = 'main/static/main/files'

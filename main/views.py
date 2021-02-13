@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import login as Login, authenticate
 from account.models import User
 from .forms import SignUpForm
+from account.save_user_session import SaveUserSession
 
 def index(request):
   return render(request, 'main/pages/index.html')
@@ -25,6 +26,8 @@ def login(request):
     if user is None:
       return render(request, redirectPage)
     Login(request, user)
+    request.session['user_id'] = user.id
+    SaveUserSession(request.session.session_key, user.id)
     if nextPage is not None:
       return redirect(nextPage);
     else:
@@ -45,6 +48,8 @@ def register(request):
       password = form.cleaned_data['password1']
       user = authenticate(login=login, password=password)
       Login(request, user)
+      request.session['user_id'] = user.id
+      SaveUserSession(request.session.session_key, user.id)
       return redirect('account_home')
     return render(request, registerFormPath, { 'errors': form.errors })
     

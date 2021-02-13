@@ -2,6 +2,8 @@ $(document).ready(() => {
   const categoryName = $('#categoryName');
   const categoryDesc= $('#categoryDesc');
   const categoryNameError = $('#categoryNameError');
+  const deleteCategoryLink = $('#deleteCategoryLink');
+  const csrftoken = Cookies.get('csrftoken');
 
   categoryName.on('change paste keyup', () => {
     if (!categoryName.val().trim()) {
@@ -31,7 +33,7 @@ $(document).ready(() => {
           categoryDesc: categoryDesc.val().trim(),
         }),
         headers: {
-          'X-CSRFToken': Cookies.get('csrftoken'),
+          'X-CSRFToken': csrftoken,
         }
       });
 
@@ -47,6 +49,32 @@ $(document).ready(() => {
       console.error('Error. category.js ', error);
       alert(`Произошла ошибка. Сообщение ошибки: ${error.message}`);
     }
+  });
+
+  deleteCategoryLink.click(async () => {
+    const { dataset: { catId } = {} } = deleteCategoryLink[0];
+
+    if (!+catId) {
+      return alert('Произошла ошибка при удалении категории');
+    }
+
+    try {
+      await fetch(`/account/categories/${catId}`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+          catId,
+        }),
+        headers: {
+          'X-CSRFToken': csrftoken,
+        }
+      })
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      return alert(`Произошла ошибка при удалении категории. Сообщение ошибки = ${error.message}`);
+    }
+    // console.log(dataset);
   });
 });
 

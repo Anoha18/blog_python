@@ -16,7 +16,7 @@
         Добавить категорию
       </button>
     </div>
-    {% if categories.count == 0 %}
+    {% if categories is not None and categories.count == 0 %}
       <div class="d-flex justify-content-center align-items-center flex-grow-1">
         <h2>Категории не найдены</h2>
       </div>
@@ -40,7 +40,11 @@
                 <td>{{ category.name }}</td>
                 <td>{{ category.description }}</td>
                 <td>{{ category.brief }}</td>
-                <td><i style="color: red;" class="fas fa-trash-alt"></i></td>
+                <td>
+                  <a href="#" data-cat-id="{{ category.id }}" id="deleteCategoryLink">
+                    <i style="color: red;" class="fas fa-trash-alt"></i>
+                  </a>
+                </td>
               </tr>
             {% endfor %}
           </tbody>
