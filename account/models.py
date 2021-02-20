@@ -14,6 +14,7 @@ class User(AbstractBaseUser):
   updated_at = models.DateTimeField(blank=False)
   deleted = models.BooleanField(default=False)
   is_admin = models.BooleanField(default=False, null=False)
+  avatar = models.TextField(null=True, blank=False)
 
   USERNAME_FIELD = 'login'
   REQUIRED_FIELDS = ['first_name']

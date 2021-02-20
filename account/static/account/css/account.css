@@ -107,3 +107,18 @@
   text-overflow: ellipsis;
   margin-bottom: 10px;
 }
+
+.sidebar-footer-link {
+  color: #fff;
+  font-size: 18px;
+  transition: all 0.2s;
+}
+
+.sidebar-footer {
+  margin: 10px 20px;
+  text-align: center;
+}
+
+.sidebar-footer-link:hover {
+  color: #41d641
+}

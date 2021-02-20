@@ -144,12 +144,56 @@ a {
   border-radius: 10px;
 }
 
-.card-text {
+.main-card-text > * {
+  font-size: 16px !important;
+}
+
+.main-card-text {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4; /* number of lines to show */
-  line-height: 1.5em;        /* fallback */
-  max-height: 6.0em;
+  line-height: 1.4em;        /* fallback */
+  max-height: 5.4em;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 10px;
+}
+
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.post-image {
+  width: 100% !important;
+  height: 40vh !important;
+  object-fit: cover !important;
+}
+
+.post-body > * > img {
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.logo-link {
+  color: #ffffff;
+}
+
+.logo-link:hover {
+  color: #41d641;
+}
+
+.CodeMirror, .CodeMirror-scroll {
+  max-height: 200px;
+}
+
+.CodeMirror.CodeMirror-fullscreen {
+  max-height: none;
+}
+
+.CodeMirror-fullscreen > .CodeMirror-scroll {
+  max-height: none;
 }

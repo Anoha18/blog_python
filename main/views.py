@@ -2,11 +2,23 @@ from django.http.response import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import login as Login, authenticate
 from account.models import User
+from .models import Post, Post_views
 from .forms import SignUpForm
 from account.save_user_session import SaveUserSession
+from django.db.models.aggregates import Count
+from markdown import Markdown
+from django.contrib.sessions.models import Session
+
+md = Markdown()
 
 def index(request):
-  return render(request, 'main/pages/index.html')
+  posts = Post.objects.annotate(views_count=Count('post_views')) \
+    .annotate(comments_count=Count('comment')) \
+    .filter(deleted=False) \
+    .order_by('-created_at')
+  for post in posts:
+      post.body = md.convert(post.body)
+  return render(request, 'main/pages/index.html', { 'posts': posts })
 
 def login(request):
   redirectPage = 'main/pages/login.html'
@@ -56,3 +68,22 @@ def register(request):
 
 def not_found_page(request, exception):
   return HttpResponse('Sorry. Page not found')
+
+def post(request, post_id):
+  post = Post.objects \
+    .annotate(views_count=Count('post_views')) \
+    .annotate(comments_count=Count('comment')) \
+    .get(pk=post_id)
+  post.body = md.convert(post.body)
+  session_key = request.session.session_key
+
+  if session_key is not None:
+    existsView = Post_views.objects.get(session_id=session_key)
+
+    if existsView.id is None:
+      Post_views.objects.create(
+        session=Session.objects.get(session_key=session_key),
+        post=post
+      )
+
+  return render(request, 'main/pages/post.html', { 'post': post })

@@ -30,3 +30,4 @@ class Comment(models.Model):
 class Post_views(models.Model):
   session = models.ForeignKey(Session, on_delete=models.CASCADE, blank=False, null=False)
   post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=False, null=False)
+  created_at = models.DateTimeField(auto_now_add=True, null=False, blank=False)

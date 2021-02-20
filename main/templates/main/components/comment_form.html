@@ -1,0 +1,9 @@
+<div class="">
+  <form method="POST" id="commentForm" enctype="multipart/form-data" class="col-12 justify-content-center d-flex flex-column w-100">
+    {% csrf_token %}
+    <textarea name="postText" placeholder="Текст поста" id="commentTextarea" style="display: none;"></textarea>
+    <div>
+      <button type="submit" class="btn btn-primary bg-dark border-0">Отправить</button>
+    </div>
+  </form>
+</div>

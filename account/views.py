@@ -18,7 +18,9 @@ def index(request):
 @login_required
 def logout(request):
   Logout(request)
-  del request.session['user']
+  user = request.session.get('user', None)
+  if user is not None:
+    del request.session['user']
   return redirect('home')
 
 @login_required

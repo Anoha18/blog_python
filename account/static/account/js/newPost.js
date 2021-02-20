@@ -13,8 +13,6 @@ $(document).ready(() => {
     spellChecker: false
   });
 
-  console.log('HERE ', simplemde);
-
   formFile.change(() => {
     const reader = new FileReader();
     const formImageContainer = $('#formImageContainer');

@@ -12,9 +12,23 @@
           <li class="header-menu__elem">
             <a href="#">Конакты</a>
           </li>
-          <li class="header-menu__elem m-0">
-            <a class="{% if request.path == '/login/' %}active{% endif %}" href="{% url 'login' %}">Войти</a>
-          </li>
+          {% if request.user.id is None %}
+            <li class="header-menu__elem m-0">
+              <a class="{% if request.path == '/login/' %}active{% endif %}" href="{% url 'login' %}">Войти</a>
+            </li>
+          {% else %}
+            <li class="header-menu__elem m-0 align-items-center" style="margin-left: 20px !important;">
+              <a href="{% url 'account_home' %}">
+                <img
+                  src="{{ request.user.avatar | default_if_none:'/static/main/img/not_image.png' }}"
+                  alt="Avatar"
+                  class="avatar"
+                  style="width: 30px; height: 30px;"
+                >
+                {{ request.user.first_name }}
+              </a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>
