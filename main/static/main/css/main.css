@@ -20,11 +20,6 @@ a {
   text-decoration: none !important;
 }
 
-.header {
-  background-color: #0C4B33;
-  padding: 10px 0;
-}
-
 .logo__container {
   font-size: 22px;
   color: white;
@@ -196,4 +191,16 @@ a {
 
 .CodeMirror-fullscreen > .CodeMirror-scroll {
   max-height: none;
+}
+
+.footer {
+  height: 250px;
+  background-color: #f9f9f9;
+  width: 100%;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }

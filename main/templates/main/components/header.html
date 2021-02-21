@@ -1,36 +1,38 @@
-<nav class="navbar navbar-dark bg-dark">
-  <div class="container header__container">
-    <div class="row w-100 align-items-center">
-      <div class="col">
-        {% include 'main/components/logo.html' %}
-      </div>
-      <div class="col p-0">
-        <ul class="header-menu text-end m-0">
-          <li class="header-menu__elem">
-            <a class="{% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Главная</a>
-          </li>
-          <li class="header-menu__elem">
-            <a href="#">Конакты</a>
-          </li>
-          {% if request.user.id is None %}
-            <li class="header-menu__elem m-0">
-              <a class="{% if request.path == '/login/' %}active{% endif %}" href="{% url 'login' %}">Войти</a>
+<div class="header">
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container header__container">
+      <div class="row w-100 align-items-center">
+        <div class="col">
+          {% include 'main/components/logo.html' %}
+        </div>
+        <div class="col p-0">
+          <ul class="header-menu text-end m-0">
+            <li class="header-menu__elem">
+              <a class="{% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Главная</a>
             </li>
-          {% else %}
-            <li class="header-menu__elem m-0 align-items-center" style="margin-left: 20px !important;">
-              <a href="{% url 'account_home' %}">
-                <img
-                  src="{{ request.user.avatar | default_if_none:'/static/main/img/not_image.png' }}"
-                  alt="Avatar"
-                  class="avatar"
-                  style="width: 30px; height: 30px;"
-                >
-                {{ request.user.first_name }}
-              </a>
+            <li class="header-menu__elem">
+              <a href="#">Конакты</a>
             </li>
-          {% endif %}
-        </ul>
+            {% if request.user.id is None %}
+              <li class="header-menu__elem m-0">
+                <a class="{% if request.path == '/login/' %}active{% endif %}" href="{% url 'login' %}">Войти</a>
+              </li>
+            {% else %}
+              <li class="header-menu__elem m-0 align-items-center" style="margin-left: 20px !important;">
+                <a href="{% url 'account_home' %}">
+                  <img
+                    src="{{ request.user.avatar | default_if_none:'/static/main/img/not_image.png' }}"
+                    alt="Avatar"
+                    class="avatar"
+                    style="width: 30px; height: 30px;"
+                  >
+                  {{ request.user.first_name }}
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</div>
