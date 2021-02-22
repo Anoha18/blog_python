@@ -1,0 +1,52 @@
+<div class="comment" id="comment-{{ comment.id }}">
+  <div class="comment__header">
+    <div class="comment-author">
+      <a class="comment-author__link color-dark" href="{% url 'account_home' %}">
+        <img
+          src="{{ comment.creator.avatar | default_if_none:'/static/main/img/not_image.png' }}"
+          alt="Avatar"
+          class="avatar"
+          style="width: 30px; height: 30px;"
+        >
+        {{ comment.creator.first_name }} {{ comment.creator.last_name|default_if_none:'' }}
+      </a>
+    </div>
+    <div class="comment-time">
+      {{ comment.created_at|date:"d M, Y" }} в {{ comment.created_at|date:"H:m" }}
+    </div>
+  </div>
+  <div class="comment__body">
+    {{ comment.text|safe }}
+  </div>
+  <div class="comment__footer">
+    <span data-comment-id="{{ comment.id }}" id="replyLink" class="reply__link">Ответить</span>
+  </div>
+  <div id="replyForm-{{ comment.id }}" class="reply__form">
+    {% include 'main/components/comment_form.html' %}
+  </div>
+  {% for child_comment in post.comments %}
+    {% if child_comment.parent_id is not None and child_comment.parent_id == comment.id %}
+      <div class="comment child">
+        <div class="comment__header">
+          <div class="comment-author">
+            <a class="comment-author__link color-dark" href="{% url 'account_home' %}">
+              <img
+                src="{{ child_comment.creator.avatar | default_if_none:'/static/main/img/not_image.png' }}"
+                alt="Avatar"
+                class="avatar"
+                style="width: 30px; height: 30px;"
+              >
+              {{ child_comment.creator.first_name }} {{ child_comment.creator.last_name|default_if_none:'' }}
+            </a>
+          </div>
+          <div class="comment-time">
+            {{ child_comment.created_at|date:"d M, Y" }} в {{ child_comment.created_at|date:"H:m" }}
+          </div>
+        </div>
+        <div class="comment__body">
+          {{ child_comment.text|safe }}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>

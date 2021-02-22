@@ -1,7 +1,9 @@
 <div class="">
-  <form method="POST" action="/comment" id="commentForm" enctype="multipart/form-data" class="col-12 justify-content-center d-flex flex-column w-100">
+  <form method="POST" action="/comment" id="commentForm{{ comment.id|default_if_none:'' }}" enctype="multipart/form-data" class="col-12 justify-content-center d-flex flex-column w-100">
     {% csrf_token %}
-    <textarea name="commentText" placeholder="Комментарий" id="commentTextarea" style="display: none;"></textarea>
+    <textarea name="commentText" placeholder="Комментарий" id="commentTextarea{{ comment.id|default_if_none:'' }}" style="display: none;"></textarea>
+    <input type="text" name="postId" id="postId{{ comment.id|default_if_none:'' }}" value="{{ post.id }}" style="display: none;">
+    <input type="text" name="parentId" value="{{ comment.id|default_if_none:'' }}" style="display: none;">
     <div>
       <button type="submit" class="btn btn-primary bg-dark border-0">Отправить</button>
     </div>

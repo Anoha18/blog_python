@@ -24,7 +24,7 @@ class Comment(models.Model):
   parent_id = models.BigIntegerField(null=True)
   post = models.ForeignKey(Post, on_delete=models.CASCADE)
   created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(blank=False)
+  updated_at = models.DateTimeField(blank=False, null=True)
   deleted = models.BooleanField(default=False, blank=False)
 
 class Post_views(models.Model):

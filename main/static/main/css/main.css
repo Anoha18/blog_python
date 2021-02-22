@@ -204,3 +204,63 @@ a {
   top: 0;
   z-index: 1000;
 }
+
+.comment {
+  margin-top: 30px;
+}
+
+.comment:first-child {
+  margin-top: 0px;
+}
+
+.comment__header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.comment-author {
+  margin-right: 10px;
+}
+
+.comment__body {
+  margin-top: 10px;
+}
+
+.comment__body > * > img {
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.comment__footer > .reply__link {
+  color: #41d641;
+  font-size: 13px;
+}
+
+.comment__footer > .reply__link:hover {
+  cursor: pointer;
+}
+
+.comment-author__link {
+  color: #212529;
+}
+
+.comment-author__link:hover {
+  color: #41d641;
+}
+
+.comment-time {
+  color: lightgray;
+}
+
+.comment > .reply__form {
+  display: none;
+}
+
+.comment__footer {
+  margin-bottom: 10px;
+}
+
+.comment.child {
+  margin-left: 25px;
+}

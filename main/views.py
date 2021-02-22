@@ -1,20 +1,37 @@
-from django.http.response import Http404, HttpResponse, HttpResponseBadRequest
+from django.db.models.expressions import OuterRef, Subquery
+from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import redirect, render
 from django.contrib.auth import login as Login, authenticate
 from account.models import User
-from .models import Post, Post_views
+from .models import Post, Post_views, Comment
 from .forms import SignUpForm
 from account.save_user_session import SaveUserSession
 from django.db.models.aggregates import Count
 from markdown import Markdown
 from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
+from django.contrib.postgres.aggregates import ArrayAgg
 
 md = Markdown()
 
 def index(request):
-  posts = Post.objects.annotate(views_count=Count('post_views')) \
-    .annotate(comments_count=Count('comment')) \
+  posts = Post.objects \
+    .annotate(views_count=Subquery(
+        Post_views.objects
+          .filter(post=OuterRef('pk'))
+          .values('post')
+          .annotate(count=Count('pk'))
+          .values('count')
+      )) \
+      .annotate(comments_count=Subquery(
+        Comment.objects
+          .filter(post=OuterRef('pk'))
+          .values('post')
+          .annotate(count=Count('pk'))
+          .values('count')
+      )) \
     .filter(deleted=False) \
     .order_by('-created_at')
   for post in posts:
@@ -74,13 +91,33 @@ def post(request, post_id):
   post = None
   try:
     post = Post.objects \
-      .annotate(views_count=Count('post_views')) \
-      .annotate(comments_count=Count('comment')) \
+      .annotate(views_count=Subquery(
+        Post_views.objects
+          .filter(post=OuterRef('pk'))
+          .values('post')
+          .annotate(count=Count('pk'))
+          .values('count')
+      )) \
+      .annotate(comments_count=Subquery(
+        Comment.objects
+          .filter(post=OuterRef('pk'))
+          .values('post')
+          .annotate(count=Count('pk'))
+          .values('count')
+      )) \
       .get(pk=post_id)
   except ObjectDoesNotExist:
     return Http404()
   post.body = md.convert(post.body)
   session_key = request.session.session_key
+
+  comments = Comment.objects.filter(post_id=post_id)
+  if comments is not None and len(comments) > 0:
+    for comment in comments:
+      comment.text = md.convert(comment.text)
+    setattr(post, 'comments', comments)
+  else:
+    setattr(post, 'comments', [])
 
   if session_key is not None:
     existsView = None
@@ -97,11 +134,32 @@ def post(request, post_id):
 
   return render(request, 'main/pages/post.html', { 'post': post })
 
+@login_required
 def comment(request):
   if request.method != 'POST':
     return HttpResponseBadRequest()
 
-  commentText = request.POST.get('commentText', None)
-  if commentText is None:
-    return HttpResponse('Comment is empty')
-  return HttpResponse('Good')
+  if request.user.id is None:
+    return HttpResponse('User not found')
+
+  user = request.user
+  comment_text = request.POST.get('commentText', None)
+  post_id = request.POST.get('postId', None)
+  parent_id = request.POST.get('parentId', None) or None
+  if comment_text is None: return HttpResponse('Comment is empty')
+
+  if post_id is None: return HttpResponse('Post id not found')
+
+  try:
+    Comment.objects.create(
+      text=comment_text,
+      creator=User.objects.get(pk=user.id),
+      parent_id=parent_id,
+      post=Post.objects.get(pk=post_id),
+    )
+  except ObjectDoesNotExist:
+    return HttpResponseServerError('На сервере произошла ошибка.')
+  except IntegrityError:
+    return HttpResponseServerError('При сохраненни комментария произошла ошибка.')
+
+  return redirect(f'/posts/{post_id}')
