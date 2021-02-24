@@ -1,13 +1,44 @@
 @font-face {
   font-family: 'RobotoSlab';
-  src: url('../fonts/RobotoSlab-Bold.ttf') format('truetype'),
-       url('../fonts/RobotoSlab-Medium.ttf') format('truetype'),
-       url('../fonts/RobotoSlab-Regular.ttf') format('truetype'),
-       url('../fonts/RobotoSlab-Light.ttf') format('truetype')
+  src: url('../fonts/RobotoSlab-Bold.ttf') format('truetype');
+  font-weight: bold;
 }
 
+@font-face {
+  font-family: 'RobotoSlab';
+  src: url('../fonts/RobotoSlab-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'RobotoSlab';
+  src: url('../fonts/RobotoSlab-Medium.ttf') format('truetype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'RobotoSlab';
+  src: url('../fonts/RobotoSlab-Light.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'RobotoSlab';
+  src: url('../fonts/RobotoSlab-Thin.ttf') format('truetype');
+  font-weight: 100;
+}
+
+/* url('../fonts/RobotoSlab-Medium.ttf') format('truetype'),
+       url('../fonts/RobotoSlab-Regular.ttf') format('truetype'),
+       url('../fonts/RobotoSlab-Light.ttf') format('truetype'),
+       url('../fonts/RobotoSlab-Black.ttf') format('truetype'),
+       url('../fonts/RobotoSlab-ExtraLight.ttf') format('truetype'),
+       url('../fonts/RobotoSlab-Thin.ttf') format('truetype') */
+
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap'); */
+
 body {
-  font-family: 'RobotoSlab' !important;
+  font-family: 'RobotoSlab', serif !important;
   height: 100%;
 }
 
@@ -23,6 +54,10 @@ a {
 .logo__container {
   font-size: 22px;
   color: white;
+}
+
+.logo__text {
+  font-weight: bold;
 }
 
 .header-menu__elem {
@@ -103,7 +138,8 @@ a {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .list__item-title:hover {
@@ -141,6 +177,7 @@ a {
 
 .main-card-text > * {
   font-size: 16px !important;
+  font-weight: normal;
 }
 
 .main-card-text {
@@ -171,6 +208,15 @@ a {
 .post-body > * > img {
   max-width: 100%;
   object-fit: cover;
+}
+
+.post-body > p {
+  font-weight: 400;
+  font-style: normal;
+}
+
+.post-title {
+  font-weight: bold;
 }
 
 .logo-link {
@@ -225,6 +271,7 @@ a {
 
 .comment__body {
   margin-top: 10px;
+  font-size: 14px;
 }
 
 .comment__body > * > img {
@@ -243,6 +290,7 @@ a {
 
 .comment-author__link {
   color: #212529;
+  font-weight: bold;
 }
 
 .comment-author__link:hover {
@@ -263,4 +311,10 @@ a {
 
 .comment.child {
   margin-left: 25px;
+}
+
+.post-create-date {
+  font-weight: normal;
+  font-size: 15px;
+  color: rgb(146, 146, 146);
 }

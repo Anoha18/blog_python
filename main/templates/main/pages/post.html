@@ -11,8 +11,26 @@
   <div class="container pt-3">
     <div class="row">
       <div class="col-12">
+        {% if post.creator.id == request.user.id %}
+          <div class="mb-2">
+            <a href="/posts/{{ post.id }}" class="btn btn-light">Редактировать</a>
+            <button data-post-id="{{ post.id }}" id="deletePostLink" class="btn btn-danger">Удалить</button>
+          </div>
+        {% endif %}
         <img src="{{ post.image }}" class="img-fluid post-image rounded" alt="image">
-        <h1 class="mt-3">{{ post.title }}</h1>
+        <div class="post-author mt-3">
+          <a class="comment-author__link color-dark" href="{% url 'account_home' %}" style="margin-right: 10px;">
+            <img
+              src="{{ post.creator.avatar | default_if_none:'/static/main/img/not_image.png' }}"
+              alt="Avatar"
+              class="avatar"
+              style="width: 30px; height: 30px;"
+            >
+            {{ post.creator.first_name }} {{ post.creator.last_name|default_if_none:'' }}
+          </a>
+          <span class="post-create-date">{{ post.created_at|date:"d M, Y" }} в {{ post.created_at|date:'m:H' }}</span>
+        </div>
+        <h1 class="mt-1 post-title">{{ post.title }}</h1>
         <div class="post-body">
           {{ post.body|safe }}
         </div>

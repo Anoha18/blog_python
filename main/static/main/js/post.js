@@ -1,5 +1,7 @@
 $(document).ready(() => {
   const textAreas = {};
+  const deletePostLink = $('#deletePostLink');
+  const csrftoken = Cookies.get('csrftoken');
   const simplemde = new SimpleMDE({
     element: document.getElementById('commentTextarea'),
     autosave: {
@@ -49,8 +51,33 @@ $(document).ready(() => {
       const replyForms = $(`.reply__form`);
       replyForms.map(index => {
         elem = replyForms[index];
+        if (elem.id !== `replyForm-${commentId}`) {
+          $(`#${elem.id}`).css('display', 'none');
+        }
       })
       e.target.innerText = 'Скрыть';
+    }
+  });
+
+  deletePostLink.click(async () => {
+    const { dataset: { postId } = {} } = deletePostLink[0];
+    if (!postId) return;
+
+    try {
+      await fetch(`/posts/${postId}`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+          postId,
+        }),
+        headers: {
+          'X-CSRFToken': csrftoken,
+        }
+      });
+
+      window.location.href = document.referrer;
+    } catch (error) {
+      console.error(error);
+      return alert(`Произошла ошибка при удалении поста. Сообщение ошибки = ${error.message}`);
     }
   });
 });

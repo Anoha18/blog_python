@@ -11,5 +11,9 @@ def SaveUserSession(sessionKey, userId):
     user=user,
     session=session
   )
-  User_sessions.objects.filter(user_id=userId).filter(active=True).exclude(pk=userSession.id).update(active=False, closed_at=datetime.now())
+  User_sessions.objects \
+    .filter(user_id=userId) \
+    .filter(active=True) \
+    .exclude(pk=userSession.id) \
+    .update(active=False, closed_at=datetime.now())
   return

@@ -1,5 +1,5 @@
 from django.db.models.expressions import OuterRef, Subquery
-from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseServerError
+from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseServerError
 from django.shortcuts import redirect, render
 from django.contrib.auth import login as Login, authenticate
 from account.models import User
@@ -35,8 +35,33 @@ def index(request):
     .filter(deleted=False) \
     .order_by('-created_at')
   for post in posts:
-      post.body = md.convert(post.body)
-  return render(request, 'main/pages/index.html', { 'posts': posts })
+    post.body = md.convert(post.body)
+    if post.views_count > 1000:
+      post.views_count = f'{round(post.views_count / 1000)}k'
+
+  recommend_posts = Post.objects \
+    .annotate(views_count=Subquery(
+        Post_views.objects
+          .filter(post=OuterRef('pk'))
+          .values('post')
+          .annotate(count=Count('pk'))
+          .values('count')
+      )) \
+      .annotate(comments_count=Subquery(
+        Comment.objects
+          .filter(post=OuterRef('pk'))
+          .values('post')
+          .annotate(count=Count('pk'))
+          .values('count')
+      )) \
+    .filter(deleted=False) \
+    .order_by('-views_count') \
+    .order_by('-comments_count')[:5]
+
+  for recommend_post in recommend_posts:
+    if recommend_post.views_count > 1000:
+      recommend_post.views_count = f'{round(recommend_post.views_count / 1000)}k'
+  return render(request, 'main/pages/index.html', { 'posts': posts, 'recommend_posts': recommend_posts })
 
 def login(request):
   redirectPage = 'main/pages/login.html'
@@ -88,51 +113,67 @@ def not_found_page(request, exception):
   return HttpResponse('Sorry. Page not found')
 
 def post(request, post_id):
-  post = None
-  try:
-    post = Post.objects \
-      .annotate(views_count=Subquery(
-        Post_views.objects
-          .filter(post=OuterRef('pk'))
-          .values('post')
-          .annotate(count=Count('pk'))
-          .values('count')
-      )) \
-      .annotate(comments_count=Subquery(
-        Comment.objects
-          .filter(post=OuterRef('pk'))
-          .values('post')
-          .annotate(count=Count('pk'))
-          .values('count')
-      )) \
-      .get(pk=post_id)
-  except ObjectDoesNotExist:
-    return Http404()
-  post.body = md.convert(post.body)
-  session_key = request.session.session_key
-
-  comments = Comment.objects.filter(post_id=post_id)
-  if comments is not None and len(comments) > 0:
-    for comment in comments:
-      comment.text = md.convert(comment.text)
-    setattr(post, 'comments', comments)
-  else:
-    setattr(post, 'comments', [])
-
-  if session_key is not None:
-    existsView = None
+  if request.method == 'GET':
+    post = None
     try:
-      existsView = Post_views.objects.get(session_id=session_key, post_id=post_id)
+      post = Post.objects \
+        .annotate(views_count=Subquery(
+          Post_views.objects
+            .filter(post=OuterRef('pk'))
+            .values('post')
+            .annotate(count=Count('pk'))
+            .values('count')
+        )) \
+        .annotate(comments_count=Subquery(
+          Comment.objects
+            .filter(post=OuterRef('pk'))
+            .values('post')
+            .annotate(count=Count('pk'))
+            .values('count')
+        )) \
+        .get(pk=post_id)
     except ObjectDoesNotExist:
+      return Http404()
+    post.body = md.convert(post.body)
+    session_key = request.session.session_key
+
+    if post.views_count > 1000:
+      post.views_count = f'{round(post.views_count / 1000)}k'
+
+    comments = Comment.objects.filter(post_id=post_id)
+    if comments is not None and len(comments) > 0:
+      for comment in comments:
+        comment.text = md.convert(comment.text)
+      setattr(post, 'comments', comments)
+    else:
+      setattr(post, 'comments', [])
+
+    if session_key is not None:
       existsView = None
+      try:
+        existsView = Post_views.objects.get(session_id=session_key, post_id=post_id)
+      except ObjectDoesNotExist:
+        existsView = None
 
-    if existsView is None or existsView.id is None:
-      Post_views.objects.create(
-        session=Session.objects.get(session_key=session_key),
-        post=post
-      )
+      if existsView is None or existsView.id is None:
+        Post_views.objects.create(
+          session=Session.objects.get(session_key=session_key),
+          post=post
+        )
 
-  return render(request, 'main/pages/post.html', { 'post': post })
+    return render(request, 'main/pages/post.html', { 'post': post })
+
+  if request.method == 'DELETE':
+    try:
+      post = Post.objects.get(pk=post_id)
+      if post.id is None:
+        return HttpResponseNotFound()
+      
+      post.deleted = True
+      post.save()
+      return HttpResponse(status=200)
+    except ObjectDoesNotExist:
+      return HttpResponseNotFound()
 
 @login_required
 def comment(request):

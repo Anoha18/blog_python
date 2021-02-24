@@ -4,8 +4,9 @@ from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import logout as Logout
 from django.contrib.auth.decorators import login_required
-from main.models import Category, Post
+from main.models import Category, Post, Post_views, Comment
 from transliterate import translit
+from django.db.models.expressions import OuterRef, Subquery
 import json
 from .file_upload import file_upload
 import traceback
@@ -25,14 +26,32 @@ def logout(request):
 
 @login_required
 def posts(request):
-  user = request.user
-
   if request.method == 'GET':
     md = Markdown()
-    userPosts = Post.objects.annotate(views_count=Count('post_views')).annotate(comments_count=Count('comment')).filter(creator=user.id).filter(deleted=False)
-    for userPost in userPosts:
-      userPost.body = md.convert(userPost.body)
-    return render(request, 'account/pages/posts.html', { 'posts': userPosts })
+    posts = Post.objects \
+    .annotate(views_count=Subquery(
+        Post_views.objects
+          .filter(post=OuterRef('pk'))
+          .values('post')
+          .annotate(count=Count('pk'))
+          .values('count')
+      )) \
+      .annotate(comments_count=Subquery(
+        Comment.objects
+          .filter(post=OuterRef('pk'))
+          .values('post')
+          .annotate(count=Count('pk'))
+          .values('count')
+      )) \
+    .order_by('-created_at') \
+    .order_by('deleted')
+    # .filter(deleted=False) \
+  for post in posts:
+    post.body = md.convert(post.body)
+    if post.views_count > 1000:
+      post.views_count = f'{round(post.views_count / 1000)}k'
+
+  return render(request, 'account/pages/posts.html', { 'posts': posts })
 
 @login_required
 def new_post(request):
@@ -75,7 +94,9 @@ def new_post(request):
 @login_required
 def categories(request):
   if request.method == 'GET':
-    categories = Category.objects.all()
+    categories = Category.objects \
+      .annotate(post_count=Count('post')) \
+      .all()
     return render(request, 'account/pages/categories.html', { 'categories': categories })
   
   if request.method == 'POST':
