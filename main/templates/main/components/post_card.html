@@ -7,7 +7,11 @@
     >
   </div>
   <div class="card-body">
-    <h3 class="card-title">{{ post.title }}</h3>
+    <h3 class="card-title">
+      <a class="card-title__link" href="{% url 'post' post_id=post.id %}">
+        {{ post.title }}
+      </a>
+    </h3>
     <div class="card-text main-card-text">{{ post.body|safe }}</div>
     <p class="card-text"><small class="text-muted">Добавлено {{ post.created_at|date:"d M, Y" }}</small></p>
     <div class="d-flex flex-row align-items-center justify-content-between">

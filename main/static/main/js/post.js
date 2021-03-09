@@ -64,7 +64,7 @@ $(document).ready(() => {
     if (!postId) return;
 
     try {
-      await fetch(`/posts/${postId}`, {
+      const response = await fetch(`/posts/${postId}`, {
         method: 'DELETE',
         body: JSON.stringify({
           postId,
@@ -74,7 +74,13 @@ $(document).ready(() => {
         }
       });
 
-      window.location.href = document.referrer;
+      if (response.status === 403) {
+        return alert('Вы не авторизованы');
+      }
+
+      if (response.status === 200) {
+        window.location.reload();
+      }
     } catch (error) {
       console.error(error);
       return alert(`Произошла ошибка при удалении поста. Сообщение ошибки = ${error.message}`);

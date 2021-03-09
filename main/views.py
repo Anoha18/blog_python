@@ -1,5 +1,5 @@
 from django.db.models.expressions import OuterRef, Subquery
-from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseServerError
+from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound, HttpResponseServerError
 from django.shortcuts import redirect, render
 from django.contrib.auth import login as Login, authenticate
 from account.models import User
@@ -164,6 +164,9 @@ def post(request, post_id):
     return render(request, 'main/pages/post.html', { 'post': post })
 
   if request.method == 'DELETE':
+    user = request.user
+    if user is None or user.id is None:
+      return HttpResponseForbidden()
     try:
       post = Post.objects.get(pk=post_id)
       if post.id is None:
