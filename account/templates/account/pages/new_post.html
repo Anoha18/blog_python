@@ -4,7 +4,13 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 {% endblock %}
 
-{% block title %}Новый пост | Личный кабинет{% endblock %}
+{% block title %}
+  {% if post is not None %}
+    Редактирование поста | Личный кабинет
+  {% else %}
+    Новый пост | Личный кабинет
+  {% endif %}
+{% endblock %}
 
 {% block content %}
   <div

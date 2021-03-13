@@ -58,8 +58,8 @@ def index(request):
           .values('count')
       )) \
     .filter(deleted=False) \
-    .order_by('-views_count') \
-    .order_by('-comments_count')[:5]
+    .order_by('-comments_count') \
+    .order_by('-views_count')[:5]
 
   for recommend_post in recommend_posts:
     if recommend_post.views_count is None:
