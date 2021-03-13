@@ -3,12 +3,14 @@
   {% if post.deleted == True %}
     <div class="account-post__deleted"></div>
   {% endif %}
-  <img src="{{ post.image }}" class="card-img-top" alt="image">
+  {% if post.image is not None and post.image != '' %}
+    <img src="{{ post.image }}" class="card-img-top" alt="image">
+  {% endif %}
   <div class="card-body">
     <h5 class="card-title">{{ post.title }}</h5>
     <div class="card-text account-card-text">{{ post.body|safe }}</div>
     <div class="d-flex flex-row align-items-center justify-content-between">
-      <a href="/posts/{{ post.id }}" class="btn {% if post.deleted == True %}btn-light{% else %}btn-dark{% endif %}">Посмотреть</a>
+      <a href="/posts/{{ post.id }}" class="btn {% if post.deleted == True %}btn-light{% else %}btn-dark{% endif %}" style="z-index: 2;">Посмотреть</a>
       <div class="account-post-card-meta d-flex flex-row">
         <div class="card-meta__item" style="margin-right: 10px;">
           <i class="fas fa-eye"></i>

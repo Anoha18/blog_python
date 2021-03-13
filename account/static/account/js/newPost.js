@@ -2,6 +2,10 @@ $(document).ready(() => {
   const formFile = $('#formFile');
   const postTitle = $('#postTitle')[0];
   const postCategory = $('#postCategory')[0];
+  const newPostFormContainer = $('#newPostFormContainer')[0];
+  const formImageContainer = $('#formImageContainer');
+  const imagePreview = $('#formImagePreview');
+  let post = null;
 
   const simplemde = new SimpleMDE({
     element: document.getElementById('postText'),
@@ -15,8 +19,6 @@ $(document).ready(() => {
 
   formFile.change(() => {
     const reader = new FileReader();
-    const formImageContainer = $('#formImageContainer');
-    const imagePreview = $('#formImagePreview');
 
     reader.onload = () => {
       imagePreview[0].src = reader.result;
@@ -46,12 +48,33 @@ $(document).ready(() => {
       return false;
     }
 
-    if (!formFile[0].files[0]) {
-      alert('Загрузите обложку поста');
-      return false;
-    }
-
     simplemde.clearAutosavedValue();
     return true;
-  })
+  });
+
+  const getPost = () => {
+    const { dataset } = newPostFormContainer;
+    if (!dataset.postid) return;
+
+    post = dataset;
+
+    setPostValue();
+  }
+
+  const setPostValue = () => {
+    postTitle.value = post.title;
+    postCategory.value = post.categoryid;
+    simplemde.value(post.body);
+    if (post.image) {
+      imagePreview[0].src = post.image;
+      formImageContainer.removeClass('d-none');
+    }
+  }
+
+  getPost();
+
+  window.onunload = () => {
+    console.log('HERE LEAVE');
+    simplemde.clearAutosavedValue();
+  };
 });

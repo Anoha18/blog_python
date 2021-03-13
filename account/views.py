@@ -1,6 +1,7 @@
 from datetime import datetime
+from main.views import register
 from django.db.models.aggregates import Count
-from django.http.response import HttpResponse
+from django.http.response import Http404, HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render
 from django.contrib.auth import logout as Logout
 from django.contrib.auth.decorators import login_required
@@ -48,6 +49,8 @@ def posts(request):
     # .filter(deleted=False) \
   for post in posts:
     post.body = md.convert(post.body)
+    if post.views_count is None:
+      post.views_count = 0
     if post.views_count > 1000:
       post.views_count = f'{round(post.views_count / 1000)}k'
 
@@ -126,3 +129,45 @@ def category(request, cat_id):
     return HttpResponse(status=200)
   
   return redirect('account_categories')
+
+@login_required
+def edit_post(request, post_id):
+  user = request.user
+  post = None
+  try:
+    post = Post.objects.get(pk = post_id)
+  except:
+    return HttpResponseNotFound()
+
+  if post is None or post.id is None:
+    return HttpResponseNotFound()
+
+  categories = Category.objects.all()
+
+  if request.method == 'GET':
+    return render(request, 'account/pages/new_post.html', {
+      'categories': categories,
+      'post': post,
+    })
+
+  if request.method == 'POST':
+    postImage = request.FILES.get('post_image', None)
+    fileUrl = None
+
+    if postImage is not None:
+      fileUrl = file_upload(user.id, postImage)
+
+    postTitle = request.POST['postTitle']
+    categoryId = request.POST['category_id']
+    postText = request.POST['postText']
+
+    post.title = postTitle
+    post.body = postText
+    if fileUrl is not None:
+      post.image = fileUrl
+    post.updated_at = datetime.now()
+    post.category = Category.objects.get(pk=int(categoryId))
+    post.save()
+    return redirect('account_posts')
+
+  return render(request, 'account/pages/new_post.html', { 'categories': categories, 'post': post })

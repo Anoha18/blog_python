@@ -1,11 +1,9 @@
 <div class="card mb-3">
-  <div class="card-img__container">
-    <img
-      src="{{ post.image }}"
-      class="card-img-top"
-      alt="image"
-    >
-  </div>
+  {% if post.image is not None and post.image != '' %}
+    <div class="card-img__container">
+      <img src="{{ post.image }}" class="card-img-top" alt="image">
+    </div>
+  {% endif %}
   <div class="card-body">
     <h3 class="card-title">
       <a class="card-title__link" href="{% url 'post' post_id=post.id %}">

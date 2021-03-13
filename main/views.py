@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.contrib.postgres.aggregates import ArrayAgg
+import json
 
 md = Markdown()
 
@@ -36,6 +37,8 @@ def index(request):
     .order_by('-created_at')
   for post in posts:
     post.body = md.convert(post.body)
+    if post.views_count is None:
+      post.views_count = 0
     if post.views_count > 1000:
       post.views_count = f'{round(post.views_count / 1000)}k'
 
@@ -59,6 +62,8 @@ def index(request):
     .order_by('-comments_count')[:5]
 
   for recommend_post in recommend_posts:
+    if recommend_post.views_count is None:
+      recommend_post.views_count = 0
     if recommend_post.views_count > 1000:
       recommend_post.views_count = f'{round(recommend_post.views_count / 1000)}k'
   return render(request, 'main/pages/index.html', { 'posts': posts, 'recommend_posts': recommend_posts })
@@ -137,6 +142,8 @@ def post(request, post_id):
     post.body = md.convert(post.body)
     session_key = request.session.session_key
 
+    if post.views_count is None:
+      post.views_count = 0
     if post.views_count > 1000:
       post.views_count = f'{round(post.views_count / 1000)}k'
 
@@ -163,10 +170,11 @@ def post(request, post_id):
 
     return render(request, 'main/pages/post.html', { 'post': post })
 
-  if request.method == 'DELETE':
-    user = request.user
-    if user is None or user.id is None:
+  user = request.user
+  if user is None or user.id is None:
       return HttpResponseForbidden()
+
+  if request.method == 'DELETE':
     try:
       post = Post.objects.get(pk=post_id)
       if post.id is None:
@@ -176,6 +184,19 @@ def post(request, post_id):
       post.save()
       return HttpResponse(status=200)
     except ObjectDoesNotExist:
+      return HttpResponseNotFound()
+  
+  if request.method == 'PUT':
+    try:
+      post = Post.objects.get(pk = post_id)
+      if post.id is None:
+        return HttpResponseNotFound()
+
+      body = json.loads(request.body)
+      post.deleted = body.get('deleted', post.deleted)
+      post.save()
+      return HttpResponse(status=200)
+    except:
       return HttpResponseNotFound()
 
 @login_required

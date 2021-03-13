@@ -13,11 +13,17 @@
       <div class="col-12">
         {% if post.creator.id == request.user.id %}
           <div class="mb-2">
-            <a href="/posts/{{ post.id }}" class="btn btn-light">Редактировать</a>
-            <button data-post-id="{{ post.id }}" id="deletePostLink" class="btn btn-danger">Удалить</button>
+            <a href="/account/posts/{{ post.id }}/edit" class="btn btn-light">Редактировать</a>
+            {% if post.deleted is not True %}
+              <button data-post-id="{{ post.id }}" id="deletePostLink" class="btn btn-danger">Удалить</button>
+            {% else %}
+              <button data-post-id="{{ post.id }}" id="recoveryPost" class="btn btn-success">Восстановить</button>
+            {% endif %}
           </div>
         {% endif %}
-        <img src="{{ post.image }}" class="img-fluid post-image rounded" alt="image">
+        {% if post.image is not None and post.image != '' %}
+          <img src="{{ post.image }}" class="img-fluid post-image rounded" alt="image">
+        {% endif %}
         <div class="post-author mt-3">
           <a class="comment-author__link color-dark" href="{% url 'account_home' %}" style="margin-right: 10px;">
             <img

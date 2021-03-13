@@ -7,7 +7,17 @@
 {% block title %}Новый пост | Личный кабинет{% endblock %}
 
 {% block content %}
-  <div class="container justify-content-center align-content-center">
+  <div
+    id="newPostFormContainer"
+    class="container justify-content-center align-content-center"
+    {% if post is not None %}
+      data-postId="{{ post.id }}"
+      data-title="{{ post.title }}"
+      data-body="{{ post.body }}"
+      data-categoryId="{{ post.category_id }}"
+      data-image="{{ post.image }}"
+    {% endif %}
+  >
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'account_home' %}" class="link-dark">Главная</a></li>
@@ -17,7 +27,12 @@
     </nav>
 
     <div class="row">
-      <form method="POST" id="newPostForm" enctype="multipart/form-data" class="col-12 justify-content-center align-items-center d-flex flex-column w-100">
+      <form
+        method="POST"
+        id="newPostForm"
+        enctype="multipart/form-data"
+        class="col-12 justify-content-center align-items-center d-flex flex-column w-100"
+      >
         {% csrf_token %}
         <div class="form-group mb-3 w-75">
           <label for="postCategory">Выберите категорию</label>
@@ -29,23 +44,40 @@
         </div>
         <div class="form-group mb-3 w-75">
           <label for="categoryName">Заголовок</label>
-          <input name="postTitle" id="postTitle" placeholder="Заголовок поста" type="text" class="form-control" aria-describedby="basic-addon3">
+          <input
+            name="postTitle"
+            id="postTitle"
+            placeholder="Заголовок поста"
+            type="text"
+            class="form-control"
+            aria-describedby="basic-addon3"
+            >
           <div id="categoryNameError" class="invalid-feedback d-none"></div>
         </div>
-        <!-- d-flex flex-column -->
         <div class="form-group mb-3 w-75 d-flex flex-column">
           <textarea name="postText" placeholder="Текст поста" id="postText" style="display: none;"></textarea>
-          <!-- <div id="categoryNameError" class="invalid-feedback d-none"></div> -->
         </div>
         <div class="form-group mb-3 w-75">
           <label for="formFile" class="form-label">Выберите картинку поста</label>
-          <input name="post_image" class="form-control" type="file" id="formFile">
+          <input
+            name="post_image"
+            class="form-control"
+            type="file"
+            id="formFile"
+            accept="image/jpeg, image/png"
+          >
         </div>
         <div class="w-75 d-none" id="formImageContainer">
           <img src="#" class="img-fluid w-100" style="object-fit: cover; height: 300px;" id="formImagePreview" alt="Responsive image">
         </div>
         <div class="w-75 mt-3">
-          <button type="submit" class="btn btn-primary bg-dark border-0">Опубликовать</button>
+          <button type="submit" class="btn btn-primary bg-dark border-0">
+            {% if post is not None %}
+              Сохранить
+            {% else %}
+              Опубликовать
+            {% endif %}
+          </button>
         </div>
       </form>
     </div>

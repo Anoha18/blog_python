@@ -5,16 +5,22 @@
 {% block content %}
   <main style="overflow-y: auto; height: 100%;">
     {% include 'main/components/header.html' %}
-    <div class="container pt-3">
+    <div class="container pt-3 min-vh-100">
       <div class="row">
         <div class="col-9">
-          {% for post in posts %}
-            {% include 'main/components/post_card.html' %}
-          {% endfor %}
+          {% if posts|length > 0 %}
+            {% for post in posts %}
+              {% include 'main/components/post_card.html' %}
+            {% endfor %}
+          {% else %}
+            <h3>Постов пока что нет</h3>
+          {% endif %}
         </div>
+        {% if recommend_posts|length > 0 %}
         <div class="col-3">
           {% include 'main/components/recommend.html' %}
         </div>
+        {% endif %}
       </div>
     </div>
     {% include 'main/components/footer.html' %}

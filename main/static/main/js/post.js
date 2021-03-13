@@ -1,6 +1,7 @@
 $(document).ready(() => {
   const textAreas = {};
   const deletePostLink = $('#deletePostLink');
+  const recoveryPostBtn = $('#recoveryPost');
   const csrftoken = Cookies.get('csrftoken');
   const simplemde = new SimpleMDE({
     element: document.getElementById('commentTextarea'),
@@ -84,6 +85,34 @@ $(document).ready(() => {
     } catch (error) {
       console.error(error);
       return alert(`Произошла ошибка при удалении поста. Сообщение ошибки = ${error.message}`);
+    }
+  });
+
+  recoveryPostBtn.click(async () => {
+    const { dataset: { postId } = {} } = recoveryPostBtn[0];
+    if (!postId) return;
+
+    try {
+      const response = await fetch(`/posts/${postId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          deleted: false,
+        }),
+        headers: {
+          'X-CSRFToken': csrftoken,
+        }
+      });
+
+      if (response.status === 403) {
+        return alert('Вы не авторизованы');
+      }
+
+      if (response.status === 200) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error(error);
+      return alert(`Произошла ошибка при восстановлении поста. Сообщение ошибки = ${error.message}`);
     }
   });
 });
