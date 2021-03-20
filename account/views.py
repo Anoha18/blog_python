@@ -1,5 +1,5 @@
 from datetime import datetime
-from main.views import register
+from main.views import post, register
 from django.db.models.aggregates import Count
 from django.http.response import Http404, HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render
@@ -8,14 +8,72 @@ from django.contrib.auth.decorators import login_required
 from main.models import Category, Post, Post_views, Comment
 from transliterate import translit
 from django.db.models.expressions import OuterRef, Subquery
-import json
+import json, locale
 from .file_upload import file_upload
 import traceback
 from markdown import Markdown
+from django.db.models.functions import TruncMonth
+from django.db.models import Exists
+
+locale.setlocale(locale.LC_ALL, 'russian_russia')
 
 @login_required
 def index(request):
-  return render(request, 'account/pages/index.html')
+  user = request.user
+  posts_views = (
+    Post_views.objects
+      .annotate(month=TruncMonth('created_at'))
+      .values('month')
+      .annotate(count=Count('id'))
+      .filter(
+        Exists(
+          Post.objects.filter(pk=OuterRef('post_id'), creator=user)
+        )
+      )
+  )
+  posts_comments = (
+    Comment.objects
+      .annotate(month=TruncMonth('created_at'))
+      .values('month')
+      .annotate(count=Count('id'))
+      .filter(
+        Exists(
+          Post.objects.filter(pk=OuterRef('post_id'), creator=user)
+        )
+      )
+  )
+
+  for post_view in posts_views:
+    month = post_view.get('month', None)
+    if month is not None:
+      post_view['month'] = month.strftime('%B')
+
+  for post_comment in posts_comments:
+    month = post_comment.get('month', None)
+    if month is not None:
+      post_comment['month'] = month.strftime('%B')
+
+  context = {
+    'data': json.dumps(
+      {
+        'post_views': [
+          {
+            'month': post_view.get('month', None),
+            'count': post_view.get('count', None)
+          }
+          for post_view in posts_views
+        ],
+        'post_comments': [
+          {
+            'month': post_comment.get('month', None),
+            'count': post_comment.get('count', None)
+          }
+          for post_comment in posts_comments
+        ]
+      }
+    )
+  }
+  return render(request, 'account/pages/index.html', context)
 
 @login_required
 def logout(request):
@@ -30,6 +88,7 @@ def posts(request):
   if request.method == 'GET':
     md = Markdown()
     posts = Post.objects \
+    .filter(creator=request.user) \
     .annotate(views_count=Subquery(
         Post_views.objects
           .filter(post=OuterRef('pk'))

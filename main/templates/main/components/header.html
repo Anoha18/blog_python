@@ -10,9 +10,9 @@
             <li class="header-menu__elem">
               <a class="{% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Главная</a>
             </li>
-            <li class="header-menu__elem">
+            <!-- <li class="header-menu__elem">
               <a href="#">Конакты</a>
-            </li>
+            </li> -->
             {% if request.user.id is None %}
               <li class="header-menu__elem m-0">
                 <a class="{% if request.path == '/login/' %}active{% endif %}" href="{% url 'login' %}">Войти</a>
